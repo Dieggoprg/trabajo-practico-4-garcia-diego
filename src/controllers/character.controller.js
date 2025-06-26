@@ -116,3 +116,15 @@ export const actualizarPersonaje = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+export const eliminarPersonaje = async (req, res) => {
+  try {
+    const eliminado = await PERSONAJES.destroy({ where: { id: req.params.id } }); // delete * from PERSONAJES where id = id de mi URL
+
+    if(eliminado === 0) return res.status(404).json({Menssage : "Personaje no encontrado"})
+
+    if (eliminado) return res.status(204).json({ message: "Personaje eliminado" });
+    else res.status(404).json({ message: "Personaje no encontrado" });
+  } catch (error) {
+     res.status(500).json({ error: error.Menssage})
+  }}
