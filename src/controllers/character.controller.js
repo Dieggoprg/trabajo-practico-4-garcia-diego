@@ -82,3 +82,37 @@ export const traePersonajesXid = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+export const actualizarPersonaje = async (req, res) => {
+  const {name, ki, race, gender, description} = req.body;
+
+    //quitarle espacios a los valores que sean STRING
+    if(req.body){  //
+        for (let valor in req.body) // 'FOR IN' para recorrer objetos
+        if(typeof valor === "string"){ //aquí compara si el type de dato de la request es string
+            req.body[valor] = req.body[valor].trim(); // y si pasa esa condición entonces le saca los espacios de la request (si es que tiene)  
+        }
+    }
+
+  try {
+    //validación para un nombre único
+    const nombreUnico = await PERSONAJES.findOne({where: {name} });
+    if(nombreUnico !== null) return res.status(400).json(
+        {Menssage: 'Nombre Existente'
+
+    })
+
+
+    const [actualizar] = await PERSONAJES.update(req.body,{
+      where: { id: req.params.id },
+    });
+    if (actualizar) {
+      const actualizarPersonaje = await PERSONAJES.findByPk(req.params.id);
+      res.json(actualizarPersonaje);
+    } else {
+      res.status(404).json({ message: "Personaje no encontrado" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
