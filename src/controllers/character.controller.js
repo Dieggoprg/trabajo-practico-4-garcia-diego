@@ -1,24 +1,28 @@
 //CONTROL  --  VALIDACIONES
 
-import PERSONAJES from "../models/characters.models.js";
+import PERSONAJES from "../models/character.model.js";
 
 export const crearPersonajes = async (req, res) => {
     const {name, ki, race, gender, description} = req.body;
 
+    console.log(req.body)
+
+    // return res.json({msg: "todo listo"})
+
     //quitarle espacios a los valores que sean STRING
-    if(req.body){  //
-        for (let valor in req.body) // 'FOR IN' para recorrer objetos
-        if(typeof valor === "string"){ //aquí compara si el type de dato de la request es string
-            req.body[valor] = req.body[valor].trim(); // y si pasa esa condición entonces le saca los espacios de la request (si es que tiene)  
-        }
-    }
+    // if(req.body){  //
+    //     for (let valor in req.body) // 'FOR IN' para recorrer objetos
+    //     if(typeof valor === "string"){ //aquí compara si el type de dato de la request es string
+    //         req.body[valor] = req.body[valor].trim ; // y si pasa esa condición entonces le saca los espacios de la request (si es que tiene)  
+    //     }
+    // }
 
     // if(!name || !ki || !race || !gender) {
     //   return res.status(400).json({menssage: "Los campos: 'name, ki, race, gender'  son Obligatorios"})
 
-    if(name === undefined || name === "") return res.status(400).json( {
-        Menssage: "Nombre no puede estar vacio"
-    } )
+    // if(name === undefined || name === "") return res.status(400).json( {
+    //     Menssage: "Nombre no puede estar vacio"
+    // } )
 
     if(ki === undefined || ki === "") return res.status(400).json( {
         Menssage: "Ki no puede estar vacio"
@@ -34,7 +38,7 @@ export const crearPersonajes = async (req, res) => {
 
     //validación del ki
     const kiEntero = Math.floor(ki);
-    if (ki === kiEntero) return res.status(400).json({Menssage: 'El Ki debe ser Integer' });
+    if (ki !== kiEntero) return res.status(400).json({Menssage: 'El Ki debe ser Integer' });
 
     //validación del Gender
     if(gender !== "Female" && gender !== "Male") return res.status(400).json({Menssage: 'Gender no válido'})
@@ -60,14 +64,15 @@ export const crearPersonajes = async (req, res) => {
   }
 };
 
+
 export const traerTodosLosPJ = async (req, res) => {
-  try {
-    const personajes = await PERSONAJES.findAll();
+    
+    try {
+        const personajes = await PERSONAJES.findAll()
+        if(personajes.lenght === 0) return res.status(404).json({Menssage : "NO SE ENCONTRÓ NINGÚN PERSONAJE"});
+            return res.status(200).json(personajes)
 
-    if(personajes.lenght === 0) return res.status(404).json({Menssage : "NO SE ENCONTRÓ NINGÚN PERSONAJE"})
-
-    return res.json(personajes);
-
+    
   } catch (error) {
    return res.status(500).json({ error: error.message });
   }
@@ -86,13 +91,13 @@ export const traePersonajesXid = async (req, res) => {
 export const actualizarPersonaje = async (req, res) => {
   const {name, ki, race, gender, description} = req.body;
 
-    //quitarle espacios a los valores que sean STRING
-    if(req.body){  //
-        for (let valor in req.body) // 'FOR IN' para recorrer objetos
-        if(typeof valor === "string"){ //aquí compara si el type de dato de la request es string
-            req.body[valor] = req.body[valor].trim(); // y si pasa esa condición entonces le saca los espacios de la request (si es que tiene)  
-        }
-    }
+    // //quitarle espacios a los valores que sean STRING
+    // if(req.body){  //
+    //     for (let valor in req.body) // 'FOR IN' para recorrer objetos
+    //     if(typeof valor === "string"){ //aquí compara si el type de dato de la request es string
+    //         req.body[valor] = req.body[valor].trim; // y si pasa esa condición entonces le saca los espacios de la request (si es que tiene)  
+    //     }
+    // }
 
   try {
     //validación para un nombre único
@@ -108,9 +113,9 @@ export const actualizarPersonaje = async (req, res) => {
     });
     if (actualizar) {
       const actualizarPersonaje = await PERSONAJES.findByPk(req.params.id);
-      res.json(actualizarPersonaje);
+      return res.json(actualizarPersonaje);
     } else {
-      res.status(404).json({ message: "Personaje no encontrado" });
+     return res.status(404).json({ message: "Personaje no encontrado" });
     }
   } catch (error) {
     res.status(500).json({ error: error.message });
