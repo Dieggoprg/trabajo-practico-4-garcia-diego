@@ -73,3 +73,12 @@ export const traerTodosLosPJ = async (req, res) => {
   }
 };
 
+export const traePersonajesXid = async (req, res) => {
+  try {
+    const personajes = await PERSONAJES.findByPk(req.params.id);
+    if (personajes) res.status(200).json(personajes);
+    else res.status(404).json({ message: "Personaje no encontrado" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
