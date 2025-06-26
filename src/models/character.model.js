@@ -3,11 +3,6 @@
   import { DataTypes } from "sequelize";
 
   const PERSONAJES = sequelize.define("Character", {
-      id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true
-      },  
     name: {
       type: DataTypes.STRING,
       allowNull: false 
