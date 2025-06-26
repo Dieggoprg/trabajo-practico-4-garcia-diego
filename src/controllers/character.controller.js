@@ -59,3 +59,17 @@ export const crearPersonajes = async (req, res) => {
    return res.status(500).json({ error: error.message });
   }
 };
+
+export const traerTodosLosPJ = async (req, res) => {
+  try {
+    const personajes = await PERSONAJES.findAll();
+
+    if(personajes.lenght === 0) return res.status(404).json({Menssage : "NO SE ENCONTRÓ NINGÚN PERSONAJE"})
+
+    return res.json(personajes);
+
+  } catch (error) {
+   return res.status(500).json({ error: error.message });
+  }
+};
+
